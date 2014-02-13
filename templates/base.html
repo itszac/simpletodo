@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        {% load staticfiles %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap.min.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}todo-main.css">
+
+    </head>
+    <body>
+    <div class='main_container'>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        {% if user.is_authenticated %}
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-container navbar-small">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Todo</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            {% if user.is_authenticated %}
+                <li><a href="/logout/">{{ user.username }}</a></li>
+
+                </ul>
+          <form action='/new_board/' method='post' class="navbar-form">
+            {% csrf_token %}
+            <div class="form-group">
+              <input type="text" name ='name' placeholder="add board" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-small">+ Board</button>
+          </form>
+           <ul>     
+            {% else %}
+            <li><a href='/new_user'>Join</a></li>
+            {% endif %}
+          </ul>
+          {% if not user.is_authenticated %}
+          <form action='/login/' method='post' class="navbar-form navbar-right">
+            {% csrf_token %}
+            <div class="form-group">
+              <input type="text" name ='username' placeholder="username" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" name = 'password' placeholder="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-small">Sign in</button>
+          </form>
+          {% endif %}
+          
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+    {% endif %}
+
+    
+
+    <div class="container">
+    {% block content %}
+      <!-- Example row of columns -->
+      {% if message %}
+      <div class = 'container alert-container'>
+        <div class = 'alert alert-info alert-dismissable'>
+        <button type='button' class = 'close' data-dismiss='alert'>&times;</button>
+        <p>{{ message }}</p>
+        </div>
+      </div>
+      {% endif %}
+      {% if not user.is_authenticated %}
+      <div class = 'join-container'>
+      <div class = 'join'>
+        <h3 style = 'text-align: center'>Simple Todos</h3>
+        <h4>Login</h4>
+          <form action='/login/' method='post' class="">
+            {% csrf_token %}
+            <div class="form-group">
+    {% if form.errors %}
+    {{ form.errors }}
+    {% endif %}
+              <input type="text" name ='username' placeholder="username" class="form-control">
+              <input type="password" name = 'password' placeholder="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-small">Sign in</button>
+          </form>
+        <h4>Join</h4>
+          <form action='/new_user/' method='post' class="">
+    {% if form.errors %}
+    {{ form.errors }}
+    {% endif %}
+            {% csrf_token %}
+            <div class="form-group">
+              <input type="text" name ='username' placeholder="username" class="form-control">
+              <input type="text" name ='email' placeholder="email(optional)" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" name = 'password' placeholder="password" class="form-control">
+              <input type="password" name = 'password' placeholder="confirm password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-small">Sign up</button>
+          </form>
+      </div>
+      </div>
+      {% endif %}
+      <div class="row">
+      {% for board in boards %}
+      
+        <div class="col-lg-3 board">
+          <h2>{{ board.name }}</h2>
+          <ul>
+            {% for task in board.task_set.all %}
+              {% if not task.completed %}
+              <li><span>{{ task.name }}</span> <span class='right'><a href='complete/{{ task.id }}/'>X</a></span></li>
+
+              {% endif %}
+            
+            {% endfor %}
+            {% for task in board.task_set.all %}
+              {% if task.completed %}
+              <li class='completed'>{{ task.name }}</li>
+
+              {% endif %}
+            
+            {% endfor %}
+              <form action = '{{ board.id }}/new_task/' class='form-inline' method = 'post'>
+              {% csrf_token %}
+              <input type='text' name = 'name' placeholder = 'add a task' class = 'form-control form-control-inline'>
+
+              <button type="submit" class="btn btn-small">+</button>
+              </form>
+            <span class='right delete'><a href='delete/{{ board.id }}/'>delete board</a></span>
+          </ul>
+        </div>
+        
+      
+      {% endfor %}
+      </div>
+      {% endblock %}
+      
+
+      <footer>
+        <p></p>
+      </footer>
+    </div> 
+         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js')</script>
+
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+        <script src="{{ STATIC_URL }}main.js"></script>
+
+        <script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src='//www.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+    </body>
+</html>

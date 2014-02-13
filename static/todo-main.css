@@ -1,0 +1,131 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+.main_container {
+    width: 90%;
+    text-align: left;
+    margin: 0 auto;
+}
+
+.join {
+    width: 40%;
+    height: 500px;
+}
+
+.profile {
+    border:2px solid gray;
+    border-radius: 4px;
+    padding: 2px;
+    margin-top: 20px;
+}
+
+
+.navbar {
+    width: 90%;
+    margin: 0 auto;
+
+}
+
+
+.message {
+    background-color: lightgreen;
+}
+
+.form-background {
+    width: 50%;
+    margin: 0 auto;
+    padding-top: 20px;
+    padding-right: 5px;
+    padding-left: 5px;
+    background-color: gray;
+}
+
+.form-container {
+    background-color: gray;
+}
+
+.navbar-header a {
+    border-right:1px solid black;
+}
+
+.jumbotron {
+    background-color: lightgray;
+}
+
+.navbar a,h1,h2,h3,h4 {
+    color: black;
+}
+
+.navbar-container {
+    background-color: gray;
+}
+
+.row {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 5px solid gray;
+    background-color: #00aedb
+}
+
+.row:nth-child(2n) {
+    background-color: #a200ff;
+}
+.row:nth-child(3n) {
+    background-color: #f47835;
+}
+.row:nth-child(4n) {
+    background-color: #8ec127;
+}
+
+.row p,a {
+    color: black;
+}
+
+.info {
+    margin-left: 0px;
+    margin-right: 15px;
+}
+
+
+.bordered {
+    background-color: ;
+    border: 2px solid black;
+    padding: 2px;
+    margin-left: 3px;
+    margin-right: 3px;
+
+}
+
+h2 {
+    color: black;
+}
+
+body {
+    text-align: center;
+    font-family: Futura,"Arial Narrow", Arial, sans-serif;;
+    background-color: white;
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+.alert-container {
+    padding-top: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

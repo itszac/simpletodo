@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class = 'profile'>
+<h4><strong>{{ user.username }}</strong></h4>
+<p>{{ profile.location }}</p>
+<p>{{ profile.description }}</p>
+
+</div>
+<div class = 'container'>
+<!--<h4>Tasks {{ user.username }} has joined</h4> !-->
+
+      {% for task in tasks %}
+      <div class="row">
+        <div class="col-lg-12">
+          <h2>{{ task.name }}</h2>
+          <p>{{ task.description }}</p>
+          <p><small><span class='info'>{{ tags }}</span><span class='info'>Location:  {{ task.location }} </span><span class='info'> Finish By: {{ task.enddate|date:"D d M" }} </span><span class='info'>{{ task.number_users }} have joined </span><span class='info'>Created by: {{ task.creator }}</span><a class="btn bordered" href="#">View details &raquo;</a><a class="btn btn-small bordered" href="#">Join &raquo;</a></small></p>
+        </div>
+        
+      </div>
+      {% endfor %}
+
+
+
+
+      {% if comments %}
+      <h4>{{ user.username }}'s comments</h4>
+      {% for comment in comments %}
+        <div class='row'>
+          <p>{{ comment.content }}</p>
+          <p>{{ comment.user }}</p>
+        </div>
+      {% endfor %}
+      {% else %}
+      <div class='row'>
+      <p>{{ user.username }} has not commented yet</p>
+      </div>
+      {% endif %}
+</div>
+{% endblock %}

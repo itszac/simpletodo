@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+      <div class="row">
+        <div class="col-lg-12">
+          <h2>{{ task.name }}</h2>
+          <p>{{ task.description }}</p>
+          <p><small><span class='info'>{{ tags }}</span><span class='info'>Location:  {{ task.location }} </span><span class='info'> Finish By: {{ task.enddate|date:"D d M" }} </span><span class='info'>{{ task.number_users }} have joined </span><span class='info'>Created by: {{ task.creator }}</span><a class="btn bordered" href="#">View details &raquo;</a><a class="btn btn-small bordered" href="#">Join &raquo;</a></small></p>
+        </div>
+        
+      </div>
+      {% if comments %}
+      {% for comment in comments %}
+        <div class='row'>
+          <p>{{ comment.content }}</p>
+          <p>{{ comment.user }}</p>
+        </div>
+      {% endfor %}
+      {% else %}
+      <div class='row'>
+      <p>No comments yet</p>
+      </div>
+      {% endif %}
+{% if user.is_authenticated %}
+<div class = 'form-container'>
+  <form action='/new_comment/{{ task.id }}' method='post'>
+    {% csrf_token %}
+    {{ form.errors }}
+    <textarea rows='3' class = 'form-control' name='content' placeholder='Comment'></textarea>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+{% else %}
+<p> Log in to comment or join this goal</p>
+{% endif %}
+
+{% endblock %}

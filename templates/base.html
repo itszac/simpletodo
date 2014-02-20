@@ -37,7 +37,7 @@
                 <li><a href="/logout/">{{ user.username }}</a></li>
 
                 </ul>
-          <form action='/new_board/' method='post' class="navbar-form">
+          <form action='/taskboard/new_board/' method='post' class="navbar-form">
             {% csrf_token %}
             <div class="form-group">
               <input type="text" name ='name' placeholder="add board" class="form-control">
@@ -46,11 +46,11 @@
           </form>
            <ul>     
             {% else %}
-            <li><a href='/new_user'>Join</a></li>
+            <li><a href='taskboard/new_user'>Join</a></li>
             {% endif %}
           </ul>
           {% if not user.is_authenticated %}
-          <form action='/login/' method='post' class="navbar-form navbar-right">
+          <form action='taskboard/login/' method='post' class="navbar-form navbar-right">
             {% csrf_token %}
             <div class="form-group">
               <input type="text" name ='username' placeholder="username" class="form-control">
@@ -85,7 +85,7 @@
       <div class = 'join'>
         <h3 style = 'text-align: center'>Simple Todos</h3>
         <h4>Login</h4>
-          <form action='/login/' method='post' class="">
+          <form action='/taskboard/login/' method='post' class="">
             {% csrf_token %}
             <div class="form-group">
     {% if form.errors %}
@@ -97,7 +97,8 @@
             <button type="submit" class="btn btn-small">Sign in</button>
           </form>
         <h4>Join</h4>
-          <form action='/new_user/' method='post' class="">
+          <form action='/taskboard/new_user/' method='post' class="">
+    {{ form.type }}
     {% if form.errors %}
     {{ form.errors }}
     {% endif %}
@@ -108,7 +109,7 @@
             </div>
             <div class="form-group">
               <input type="password" name = 'password' placeholder="password" class="form-control">
-              <input type="password" name = 'password' placeholder="confirm password" class="form-control">
+              <input type="password" name = 'password_confirm' placeholder="confirm password" class="form-control">
             </div>
             <button type="submit" class="btn btn-small">Sign up</button>
           </form>
@@ -123,7 +124,7 @@
           <ul>
             {% for task in board.task_set.all %}
               {% if not task.completed %}
-              <li><span>{{ task.name }}</span> <span class='right'><a href='complete/{{ task.id }}/'>X</a></span></li>
+              <li><span>{{ task.name }}</span> <span class='right'><a href='/taskboard/complete/{{ task.id }}/'>X</a></span></li>
 
               {% endif %}
             
@@ -135,13 +136,13 @@
               {% endif %}
             
             {% endfor %}
-              <form action = '{{ board.id }}/new_task/' class='form-inline' method = 'post'>
+              <form action = 'taskboard/{{ board.id }}/new_task/' class='form-inline' method = 'post'>
               {% csrf_token %}
               <input type='text' name = 'name' placeholder = 'add a task' class = 'form-control form-control-inline'>
 
               <button type="submit" class="btn btn-small">+</button>
               </form>
-            <span class='right delete'><a href='delete/{{ board.id }}/'>delete board</a></span>
+            <span class='right delete'><a href='taskboard/delete/{{ board.id }}/'>delete board</a></span>
           </ul>
         </div>
         

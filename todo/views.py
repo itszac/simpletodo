@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.utils import timezone
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
@@ -53,7 +53,7 @@ def new_board(request):
                  priority = 0,
                  )
         b.save()
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/taskboard')
     
 
 def new_task(request, board_id):
@@ -72,7 +72,7 @@ def new_task(request, board_id):
                  )
         t.save()
         print t
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/taskboard')
 
     return render_to_response('base.html', {
         
@@ -82,12 +82,12 @@ def complete_task(request, task_id):
     t = Task.objects.get(pk= task_id)
     t.completed = True
     t.save()
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/taskboard')
 
 def delete_board(request, board_id):
     b = Board.objects.get(pk= board_id)
     b.delete()
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/taskboard')
 
 def login_user(request):
     #add a please join or login message
@@ -103,8 +103,8 @@ def login_user(request):
             if u is not None:
                 login(request, u)
             else:
-                return HttpResponseRedirect('/new_user/')
-            return index(request, message = 'loggedin') # Redirect after POST
+                return HttpResponseRedirect('/taskboard')
+            return HttpResponseRedirect('/taskboard') # Redirect after POST
     else:
         form = LoginForm() # An unbound form
 
@@ -114,7 +114,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return index(request)
+    return redirect('/taskboard')
 
 def new_user(request):
     dictionary = {}
@@ -131,30 +131,17 @@ def new_user(request):
                 user = User.objects.create_user(username, email, password)
             except:
                 dictionary['error'] = 'Username is taken'
-            up = UserProfile(user = user, description = description, location = location)
-            up.save()
-
-            return index(request, message = 'newuser') # Redirect after POST
+            u = authenticate(username=username, password=password)
+            if u is not None:
+                login(request, u)
+            return HttpResponseRedirect('/taskboard') # Redirect after POST
             print user
     else:
-        form = TaskForm() # An unbound form
+        form = UserForm() # An unbound form
     dictionary['form'] = form
-    return render_to_response('new_user.html', dictionary, context_instance=RequestContext(request))
+    return render_to_response('base.html', dictionary, context_instance=RequestContext(request))
 
 
-
-def user_detail(request, username):
-    user = User.objects.get(username = username)
-    tasks = user.task_set.all()
-    comments = Comment.objects.filter(user = user)
-    profile = UserProfile.objects.get(user = user)
-
-    return render_to_response('user_detail.html', {
-        'user': user,
-        'profile': profile,
-        'tasks': tasks,
-        'comments': comments,
-    }, context_instance=RequestContext(request))    
 
 def join(request, task_id):
     
